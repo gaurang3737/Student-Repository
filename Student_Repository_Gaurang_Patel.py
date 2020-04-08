@@ -145,7 +145,10 @@ class Repository:
     def _read_students(self) -> None:
         """reading students.txt and updating the 'students' dictionary"""
         for cwid,name,major in file_reader(os.path.join(self._path,"students.txt"),3,sep=';',header=True):
-            self._students[cwid] = Student(cwid,name,major,self._majors[major].get_required(),self._majors[major].get_electives())
+            if self._majors.get(major) is None:#Student with major not found in major.txt
+                self._students[cwid] = Student(cwid,name,major,[],[])
+            else:
+                self._students[cwid] = Student(cwid,name,major,self._majors[major].get_required(),self._majors[major].get_electives())
 
     def _read_instructors(self) -> None:
         """reading instructors.txt and updating the 'instructors' dictionary"""
